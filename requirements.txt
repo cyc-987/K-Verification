@@ -1,0 +1,2 @@
+PyQt5
+pyqt5-tools # Mac 用户请去官网下载 Qt designer
