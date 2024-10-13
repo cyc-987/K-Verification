@@ -1,2 +1,4 @@
 PyQt5
 pyqt5-tools # Mac 用户请去官网下载 Qt designer
+pyserial
+cryptography  # 用于处理加密验证

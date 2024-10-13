@@ -7,8 +7,7 @@ FOLDER := ui
 UI1 := mainwindow
 
 all: ui1 run
-	$(PYTHON) -u main.py
-	
+
 run:
 	$(PYTHON) -u main.py
 

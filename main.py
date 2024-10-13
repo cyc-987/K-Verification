@@ -1,8 +1,20 @@
+# sys tools
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
 import sys
+from serial.tools import list_ports
+from PyQt5.QtCore import pyqtSignal
+
+# ui class
 from ui.mainwindow import Ui_MainWindow
 
+# self defined class
+from serialThread import SerialThread
+from controller import Controller
+
 class MyMainWindow(QMainWindow, Ui_MainWindow):
+    # signals
+    connect_port = pyqtSignal(str)  
+    
     def __init__(self, parent=None):
         super(MyMainWindow, self).__init__(parent)
         self.setupUi(self)
@@ -11,7 +23,28 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.version_info = ("demo version, insider preview \n " + 
                              "restricted to internal use only \n " +
                              "cyc, 2024-10-12, 0.0.1")
+        
+        # init behavior
+        self.getAvailablePorts()
+        
+        # signal connections
+        self.connectButton.clicked.connect(self.connectPort)
     
+    def getAvailablePorts(self): 
+        ports = list_ports.comports()
+        available_ports = [port.device for port in ports]
+        self.comboBox_port.clear()
+
+        if available_ports:
+            self.comboBox_port.addItems(available_ports)
+        else:
+            self.comboBox_port.addItem("no available ports")
+
+    def connectPort(self):
+        port = self.comboBox_port.currentText()
+        self.connect_port.emit(port)
+        print("selected port: ", port)
+         
     def printContent(self):
         print(self.password1.text() if self.password1.text() else "empty")
         print(self.password2.text() if self.password2.text() else "empty")
@@ -23,6 +56,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    
     mainWindow = MyMainWindow()
+    serialF = SerialThread()
+    ctrl = Controller(mainWindow, serialF)
+    
     mainWindow.show()
     sys.exit(app.exec_())
