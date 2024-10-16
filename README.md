@@ -4,9 +4,10 @@
 ```bash
 pip install -r requirements.txt
 ```
-## 2 Generate RSA key pair
-```bash
-python -u generateKeys.py
-```
 
-## 3 Load the Private Key to your arduino Board
+## 2 Load the Private Key to your arduino Board
+
+# Acknowledgements
+the RSA functions are modified from this Library:
+
+[nikkotorcita/RSA_arduino_library](https://github.com/nikkotorcita/RSA_arduino_library)
