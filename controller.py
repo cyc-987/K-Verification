@@ -16,6 +16,7 @@ class Controller:
         # connect the signal
         self.ui.connect_port.connect(self.startThread)
         self.serial_thread.connect_status.connect(self.handle_connect_status)
+        self.ui.record.connect(self.handle_record)
     
     def startThread(self, port):
         if self.connected: 
@@ -42,6 +43,9 @@ class Controller:
             self.connected = True
         else:
             self.ui.label_connect_status.setText("Unknown")
+    
+    def handle_record(self, status):
+        return
         
 
     def handle_send_data(self, data):

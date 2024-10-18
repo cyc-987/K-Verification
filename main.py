@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
 import sys
 from serial.tools import list_ports
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import QUrl
+from PyQt5.QtGui import QDesktopServices
 
 # ui class
 from ui.mainwindow import Ui_MainWindow
@@ -13,7 +15,9 @@ from controller import Controller
 
 class MyMainWindow(QMainWindow, Ui_MainWindow):
     # signals
-    connect_port = pyqtSignal(str)  
+    connect_port = pyqtSignal(str)
+    
+    record = pyqtSignal(int)#0: end; 1: start
     
     def __init__(self, parent=None):
         super(MyMainWindow, self).__init__(parent)
@@ -26,6 +30,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         
         # init behavior
         self.getAvailablePorts()
+        self.waiting_for_retrying = False
         
         # signal connections
         self.connectButton.clicked.connect(self.connectPort)
@@ -44,6 +49,20 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         port = self.comboBox_port.currentText()
         self.connect_port.emit(port)
         print("selected port: ", port)
+        
+    def verifyPasscode(self):
+        password_input = [self.password1.text(), self.password2.text(), self.password3.text(), self.password4.text()]
+        # judge empty
+        if not all(password_input):
+            self.label_error_content.setText("Empty input")
+            return
+        return
+    
+    def startRecord(self):
+        self.record.emit(1)
+    
+    def endRecord(self):
+        self.record.emit(0)
          
     def printContent(self):
         print(self.password1.text() if self.password1.text() else "empty")
@@ -53,6 +72,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         
     def showAbout(self):
         QMessageBox.about(self, "About", self.version_info)
+    
+    def jumpToRepo(self):
+        QDesktopServices.openUrl(QUrl("https://github.com/cyc-987/K-Verification"))
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)

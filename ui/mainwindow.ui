@@ -202,6 +202,162 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
+    <widget class="QWidget" name="">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>4</y>
+       <width>381</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="leftMargin">
+       <number>10</number>
+      </property>
+      <property name="topMargin">
+       <number>10</number>
+      </property>
+      <property name="rightMargin">
+       <number>10</number>
+      </property>
+      <property name="bottomMargin">
+       <number>10</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label_veri">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Verification Status</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QLabel" name="label_password">
+          <property name="text">
+           <string>Password:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_password_status">
+          <property name="text">
+           <string>False</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>120</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <item>
+         <widget class="QLabel" name="label_keyboard">
+          <property name="text">
+           <string>Typestyle:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_keyboard_status">
+          <property name="text">
+           <string>False</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>120</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_7">
+        <item>
+         <widget class="QLabel" name="label_error">
+          <property name="text">
+           <string>Error:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_error_content">
+          <property name="text">
+           <string>None.</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
    </widget>
    <widget class="QFrame" name="frame_settings_area">
     <property name="geometry">
@@ -367,8 +523,8 @@
      <y>296</y>
     </hint>
     <hint type="destinationlabel">
-     <x>212</x>
-     <y>234</y>
+     <x>221</x>
+     <y>256</y>
     </hint>
    </hints>
   </connection>
@@ -411,8 +567,8 @@
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>332</x>
-     <y>279</y>
+     <x>398</x>
+     <y>312</y>
     </hint>
     <hint type="destinationlabel">
      <x>329</x>
@@ -427,8 +583,8 @@
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>363</x>
-     <y>273</y>
+     <x>398</x>
+     <y>312</y>
     </hint>
     <hint type="destinationlabel">
      <x>426</x>
@@ -443,12 +599,12 @@
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>298</x>
-     <y>276</y>
+     <x>398</x>
+     <y>312</y>
     </hint>
     <hint type="destinationlabel">
-     <x>613</x>
-     <y>232</y>
+     <x>738</x>
+     <y>256</y>
     </hint>
    </hints>
   </connection>
@@ -468,10 +624,45 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionGithub_Repo</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>jumpToRepo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>enterButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>verifyPasscode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>498</x>
+     <y>296</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>printContent()</slot>
   <slot>showAbout()</slot>
   <slot>getAvailablePorts()</slot>
+  <slot>jumpToRepo()</slot>
+  <slot>verifyPasscode()</slot>
+  <slot>startRecord()</slot>
  </slots>
 </ui>

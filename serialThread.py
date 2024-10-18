@@ -4,7 +4,7 @@ import time
 import sys
 import serial
 
-from RSA import encrypt, decrypt
+from utils.message import *
 
 class SerialThread(QThread):
     # signals
@@ -20,7 +20,7 @@ class SerialThread(QThread):
         
         self.privateKey_local = [14351, 1283]
         self.publicKey_local = [14351, 11]
-        self.publicKey_arduino = [14351, 11] 
+        self.publicKey_arduino = [9379, 11]
 
     def run(self):
         # 第一个循环：尝试建立连接，最多尝试三次
@@ -51,6 +51,7 @@ class SerialThread(QThread):
             self.is_connected = False
             self.connect_status.emit(4)
             return
+        print("公钥验证成功")
         
         # 大循环：保持连接
         while True:
@@ -69,31 +70,34 @@ class SerialThread(QThread):
     
     def verifyDevice(self):
         # send data
-        current_time = time.time()
-        message = ("ryou"+str(int(current_time)%114514)+"\n")
-        message_encrypt = encrypt(message, self.publicKey_arduino)
-        if self.send_data(message):
+        verification_code = self.genVerificationCode()
+        message_encrypt = encrypt("ryou", verification_code, self.publicKey_arduino)
+        if self.send_data(message_encrypt):
             pass
         else: return False
+        print("发送加密数据")
+        print("ryou"+verification_code)
         
         # receive data
         received_message_encrypt = self.receive_data()
         if received_message_encrypt == False:
             return False
-        received_message = decrypt(received_message_encrypt, self.privateKey_local)
+        received_message = decrypt(received_message_encrypt, verification_code, self.privateKey_local)
+        print("接收加密数据")
+        print(received_message)
         
         # judge
-        if received_message == message:
+        if received_message == "hello":
             return True
         else:
             return False
 
     
-    def send_data(self, data, max_wating_time_second=1):
+    def send_data(self, data, max_wating_time_second=2):
         
         # 超时
         start_time = time.time()
-        while self.serial_connection.readline() != -1:
+        while self.serial_connection.in_waiting:
             if time.time() - start_time < max_wating_time_second:
                 pass
             else:
@@ -104,7 +108,10 @@ class SerialThread(QThread):
         
         try:
             if self.serial_connection is not None:
-                self.serial_connection.write(data.encode('utf-8'))
+                self.serial_connection.write(data)
+                print("发送成功")
+                # print(data)
+                return 1
             else:
                 print("连接无效或未验证，无法发送数据。")
         except serial.SerialTimeoutException as e:
@@ -116,26 +123,24 @@ class SerialThread(QThread):
     def receive_data(self, max_wating_time_second=3):
         # 超时
         start_time = time.time()
-        while self.serial_connection.readline() == -1:
+        data = self.serial_connection.readline()
+        while not data:
+            data = self.serial_connection.readline()
             if time.time() - start_time < max_wating_time_second:
                 pass
             else:
                 break
         if time.time() - start_time >= max_wating_time_second:
             print(f"接收超时{max_wating_time_second}秒")
-            return 0
-                
-        try:
-            if self.serial_connection is not None:
-                data = self.serial_connection.readline()
-                return data.decode('utf-8')
-            else:
-                print("连接无效或未验证，无法接收数据。")
-        except serial.SerialTimeoutException as e:
-            print(f"接收数据超时: {e}")
-        except Exception as e:
-            print(f"接收数据时发生未知错误: {e}")
-        return 0
+            return False
+        print("接收成功")
+        # print(data)
+        return data
+    
+    def genVerificationCode(self):
+        current_time = time.time()
+        verification_code = str(int(current_time)%114514)[-5:]
+        return verification_code
 
     def stop(self):
         # if self.is_connected:
