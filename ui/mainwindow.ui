@@ -270,7 +270,7 @@
         <item>
          <widget class="QLabel" name="label_password_status">
           <property name="text">
-           <string>False</string>
+           <string>None</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -310,7 +310,7 @@
         <item>
          <widget class="QLabel" name="label_keyboard_status">
           <property name="text">
-           <string>False</string>
+           <string>None</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -685,6 +685,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>clearButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>296</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>password1</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>startRecord()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>140</x>
+     <y>246</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>printContent()</slot>
@@ -694,5 +726,6 @@
   <slot>verifyPasscode()</slot>
   <slot>startRecord()</slot>
   <slot>abortConnection()</slot>
+  <slot>clear()</slot>
  </slots>
 </ui>

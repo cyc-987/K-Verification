@@ -16,8 +16,11 @@ class Controller:
         # connect the signal
         self.ui.connect_port.connect(self.startThread)
         self.serial_thread.connect_status.connect(self.handle_connect_status)
-        self.ui.record.connect(self.handle_record)
         self.ui.connect_abort.connect(self.abortConnection)
+        
+        self.ui.record.connect(self.handle_record)
+        self.serial_thread.record_data.connect(self.handle_record_result)
+        
     
     def startThread(self, port):
         if self.connected: 
@@ -41,8 +44,10 @@ class Controller:
             self.ui.label_connect_status.setText("Connecting...")
         elif status == 2:
             self.ui.label_connect_status.setText("Verifying...")
+            self.connected = False
         elif status == 3:
             self.ui.label_connect_status.setText("Holding...")
+            self.connected = True
         elif status == 4:
             self.ui.label_connect_status.setText("Failed")
             self.connected = False
@@ -56,7 +61,39 @@ class Controller:
         else:
             self.ui.label_connect_status.setText("Unknown")
     
-    def handle_record(self, status):
+    def handle_record(self):
+        # check board status
+        if not self.connected:
+            self.handle_record_error(1)
+            return
+        
+        if self.ui.record_status:
+            return
+        
+        self.ui.clearButton.setEnabled(False)
+        self.ui.label_keyboard_status.setText("Recording...")
+        self.serial_thread.record = True
+        self.ui.record_status = True
+        return
+    
+    def handle_record_result(self, result):
+        try: result_data = float(result)
+        except: result_data = 0
+        
+        if result_data > 0.75:
+            self.ui.label_keyboard_status.setText("Pass - " + str(result_data*100) + "%")
+            self.ui.keyboard_result = True
+        else:
+            self.ui.label_keyboard_status.setText("Failed - " + str(result_data*100) + "%")
+            self.ui.keyboard_result = False
+        self.ui.clearButton.setEnabled(True)
+        return
+    
+    def handle_record_error(self, error):
+        if error == 1:
+            self.ui.label_error_content.setText("Board not connected.")
+        elif error == 0:
+            self.ui.label_error_content.setText("None")
         return
         
 

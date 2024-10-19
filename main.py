@@ -18,7 +18,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     connect_port = pyqtSignal(str)
     connect_abort = pyqtSignal()
     
-    record = pyqtSignal(int)#0: end; 1: start
+    record = pyqtSignal()
     
     def __init__(self, parent=None):
         super(MyMainWindow, self).__init__(parent)
@@ -31,7 +31,12 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         
         # init behavior
         self.getAvailablePorts()
-        self.waiting_for_retrying = False
+        self.verificaiton_status = True
+        self.record_status = False
+        
+        # verification result
+        self.password_result = False
+        self.keyboard_result = False
         
         # signal connections
         self.connectButton.clicked.connect(self.connectPort)
@@ -56,18 +61,39 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         print("abort connection")
         
     def verifyPasscode(self):
+        self.verificaiton_status = False
+        self.enterButton.setEnabled(False)
         password_input = [self.password1.text(), self.password2.text(), self.password3.text(), self.password4.text()]
         # judge empty
         if not all(password_input):
-            self.label_error_content.setText("Empty input")
+            self.label_error_content.setText("Empty input.")
             return
+        
+        correct_passwords = ["hello", "world", "sick", "hack"]
+        correct_count = sum(1 for p in password_input if p in correct_passwords)
+        
+        if correct_count >= 3:
+            self.password_result = True
+            self.label_password_status.setText("Pass")
+        else:
+            self.password_result = False
+            self.label_password_status.setText("Failed")
+        
         return
     
     def startRecord(self):
-        self.record.emit(1)
+        self.record.emit()
     
-    def endRecord(self):
-        self.record.emit(0)
+    def clear(self):
+        self.password_result = False
+        self.keyboard_result = False
+        self.label_error_content.setText("None.")
+        self.label_password_status.setText("None")
+        self.label_keyboard_status.setText("None")
+        self.verificaiton_status = True
+        self.record_status = False
+        self.enterButton.setEnabled(True)
+        return
          
     def printContent(self):
         print(self.password1.text() if self.password1.text() else "empty")

@@ -21,6 +21,7 @@ class SerialThread(QThread):
         self.is_connected = False
         self.record = False
         self.abort = False
+        
         # keys
         self.privateKey_local = [14351, 1283]
         self.publicKey_local = [14351, 11]
@@ -82,7 +83,7 @@ class SerialThread(QThread):
             
             # 录音判断模式
             if self.record:
-                self.record()
+                self.recordFunc()
                 self.record = False
             
             time.sleep(0.1)
@@ -111,7 +112,28 @@ class SerialThread(QThread):
         else:
             return False
     
-    def record(self):
+    def recordFunc(self):
+        # send data
+        verification_code = self.genVerificationCode()
+        message_encrypt = encrypt("record", verification_code, self.publicKey_arduino)
+        if self.send_data(message_encrypt):
+            pass
+        else: return False
+        print("发送加密数据")
+        print("record"+verification_code)
+        
+        time.sleep(10)
+        
+        # receive data
+        received_message_encrypt = self.receive_data()
+        if received_message_encrypt == False:
+            return False
+        received_message = decrypt(received_message_encrypt, verification_code, self.privateKey_local)
+        print("接收加密数据")
+        print(received_message)
+        
+        self.record_data.emit(received_message)
+        
         return
 
     

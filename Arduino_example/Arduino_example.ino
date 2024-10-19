@@ -5,6 +5,8 @@
 char msg_hello[PLAINTEXT_SIZE] = "hello";
 char msg_ryou[PLAINTEXT_SIZE] = "ryou";
 char msg_error[PLAINTEXT_SIZE] = "error";
+char msg_record[PLAINTEXT_SIZE] = "record";
+char msg_0965[PLAINTEXT_SIZE] = "0.965";
 
 int publicKey_up[2] = {14351, 11};
 int publicKey[2] = {9379, 11};
@@ -41,6 +43,10 @@ void loop()
         // 首次接入验证
         memset(plain, 0, PLAINTEXT_SIZE);
         strncpy(plain, msg_hello, PLAINTEXT_SIZE);
+    }else if(rsa.compare(plain, msg_record, PLAINTEXT_SIZE)){
+        // 记录数据
+        memset(plain, 0, PLAINTEXT_SIZE);
+        strncpy(plain, msg_0965, PLAINTEXT_SIZE);
     }else{
         // 处理未识别字符
         memset(plain, 0, PLAINTEXT_SIZE);

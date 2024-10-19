@@ -212,6 +212,8 @@ class Ui_MainWindow(object):
         self.actionGithub_Repo.triggered.connect(MainWindow.jumpToRepo) # type: ignore
         self.enterButton.clicked.connect(MainWindow.verifyPasscode) # type: ignore
         self.abortButton.clicked.connect(MainWindow.abortConnection) # type: ignore
+        self.clearButton.clicked.connect(MainWindow.clear) # type: ignore
+        self.password1.textEdited['QString'].connect(MainWindow.startRecord) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -225,9 +227,9 @@ class Ui_MainWindow(object):
         self.enterButton.setText(_translate("MainWindow", "Confirm"))
         self.label_veri.setText(_translate("MainWindow", "Verification Status"))
         self.label_password.setText(_translate("MainWindow", "Password:"))
-        self.label_password_status.setText(_translate("MainWindow", "False"))
+        self.label_password_status.setText(_translate("MainWindow", "None"))
         self.label_keyboard.setText(_translate("MainWindow", "Typestyle:"))
-        self.label_keyboard_status.setText(_translate("MainWindow", "False"))
+        self.label_keyboard_status.setText(_translate("MainWindow", "None"))
         self.label_error.setText(_translate("MainWindow", "Error:"))
         self.label_error_content.setText(_translate("MainWindow", "None."))
         self.label_select_port.setText(_translate("MainWindow", "Select Port"))
