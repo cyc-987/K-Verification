@@ -8,7 +8,9 @@ from utils.message import *
 
 class SerialThread(QThread):
     # signals
-    connect_status = pyqtSignal(int) # 0: success, 1: start connecting, 2: start verification, 3: holding, 4: failed    
+    connect_status = pyqtSignal(int) # 0: no connection, 1: start connecting, 2: start verification, 3: holding, 4: failed
+    record_status = pyqtSignal(int) # 0: not recording, 1: recording
+    record_data = pyqtSignal(str)
 
     def __init__(self, port=None, baudrate=9600):
         super().__init__()
@@ -17,7 +19,9 @@ class SerialThread(QThread):
         self.serial_connection = None
         self.is_running = True
         self.is_connected = False
-        
+        self.record = False
+        self.abort = False
+        # keys
         self.privateKey_local = [14351, 1283]
         self.publicKey_local = [14351, 11]
         self.publicKey_arduino = [9379, 11]
@@ -54,17 +58,32 @@ class SerialThread(QThread):
         print("公钥验证成功")
         
         # 大循环：保持连接
+        time1 = time.time()
         while True:
             self.connect_status.emit(3)
+            
+            # 判断是否终止
+            if self.abort:
+                self.serial_connection.close()
+                self.connect_status.emit(0)
+                self.abort = False
+                return
+            
             # 测试连接状态
-            time1 = time.time()
             if time.time() - time1 > 10:
+                self.connect_status.emit(2)
                 if not self.verifyDevice():
                     print("设备验证失败")
                     self.serial_connection.close()
                     self.connect_status.emit(4)
+                    return
                 else:
                     time1 = time.time()
+            
+            # 录音判断模式
+            if self.record:
+                self.record()
+                self.record = False
             
             time.sleep(0.1)
     
@@ -91,6 +110,9 @@ class SerialThread(QThread):
             return True
         else:
             return False
+    
+    def record(self):
+        return
 
     
     def send_data(self, data, max_wating_time_second=2):

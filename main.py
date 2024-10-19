@@ -16,6 +16,7 @@ from controller import Controller
 class MyMainWindow(QMainWindow, Ui_MainWindow):
     # signals
     connect_port = pyqtSignal(str)
+    connect_abort = pyqtSignal()
     
     record = pyqtSignal(int)#0: end; 1: start
     
@@ -49,6 +50,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         port = self.comboBox_port.currentText()
         self.connect_port.emit(port)
         print("selected port: ", port)
+    
+    def abortConnection(self):
+        self.connect_abort.emit()
+        print("abort connection")
         
     def verifyPasscode(self):
         password_input = [self.password1.text(), self.password2.text(), self.password3.text(), self.password4.text()]

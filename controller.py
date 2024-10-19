@@ -17,6 +17,7 @@ class Controller:
         self.ui.connect_port.connect(self.startThread)
         self.serial_thread.connect_status.connect(self.handle_connect_status)
         self.ui.record.connect(self.handle_record)
+        self.ui.connect_abort.connect(self.abortConnection)
     
     def startThread(self, port):
         if self.connected: 
@@ -25,7 +26,15 @@ class Controller:
         
         self.serial_thread.port = port
         self.serial_thread.start()
-        self.serial_thread.stop()
+        self.ui.connectButton.setEnabled(False)
+        # self.serial_thread.stop()
+        # self.ui.connectButton.setEnabled(True)
+    
+    def abortConnection(self):
+        self.serial_thread.abort = True
+        self.connected = False
+        self.ui.connectButton.setEnabled(True)
+        self.ui.label_connect_status.setText("No connection")
     
     def handle_connect_status(self, status):
         if status == 1: 
@@ -38,9 +47,12 @@ class Controller:
             self.ui.label_connect_status.setText("Failed")
             self.connected = False
             self.serial_thread.stop()
+            self.ui.connectButton.setEnabled(True)
         elif status == 0:
-            self.ui.label_connect_status.setText("Connected")
-            self.connected = True
+            self.ui.label_connect_status.setText("No Connection")
+            self.connected = False
+            self.serial_thread.stop()
+            self.ui.connectButton.setEnabled(True)
         else:
             self.ui.label_connect_status.setText("Unknown")
     
