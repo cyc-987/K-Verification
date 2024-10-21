@@ -184,6 +184,7 @@ class SerialThread(QThread):
     def genVerificationCode(self):
         current_time = time.time()
         verification_code = str(int(current_time)%114514)[-5:]
+        verification_code = verification_code.zfill(5)
         return verification_code
 
     def stop(self):
