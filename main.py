@@ -4,7 +4,7 @@ import sys
 from serial.tools import list_ports
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtCore import QUrl
-from PyQt5.QtGui import QDesktopServices
+from PyQt5.QtGui import QDesktopServices, QPixmap
 
 # ui class
 from ui.mainwindow import Ui_MainWindow
@@ -27,7 +27,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         # info
         self.version_info = ("demo version, insider preview \n " + 
                              "restricted to internal use only \n " +
-                             "cyc, 2024-10-12, 0.0.1")
+                             "cyc, 2024-10-24, 0.1.0")
         
         # init behavior
         self.getAvailablePorts()

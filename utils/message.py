@@ -30,5 +30,8 @@ def encrypt(plainText, verificationCode, publicKey):
 def decrypt(cipherText, verificationCode, privateKey):
     cipherText = arduino_to_latin1(cipherText).decode('latin-1')
     text_decrypt = RSA.decrypt(cipherText, privateKey).rstrip('\x00')
+    verificationCode_detected = text_decrypt[-len(verificationCode):]
+    if verificationCode_detected != verificationCode:
+        return None
     text_plain = text_decrypt[:-len(verificationCode)]
     return text_plain
